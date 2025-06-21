@@ -1,0 +1,27 @@
+{
+  "name": "elefin-cli",
+  "version": "1.0.5",
+  "description": "only elefin buyer client project",
+  "author": "dedypry",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": [
+    "elefin",
+    "cli"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "elefin": "./index.js"
+  },
+  "dependencies": {
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
+    "inquirer": "^12.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dedypry/elefin-cli.git"
+  }
+}
