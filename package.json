@@ -1,9 +1,9 @@
 {
   "name": "elefin-cli",
   "version": "2.0.0",
-  "description": "only elefin buyer client project",
+  "description": "only elefin backend project",
   "author": "dedypry",
-  "main": "index.js",
+  "main": "bin/cli.js",
   "license": "MIT",
   "keywords": [
     "elefin",
@@ -26,9 +26,5 @@
     "inquirer": "^12.8.2",
     "ora": "^8.2.0",
     "pluralize": "^8.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dedypry/elefin-cli.git"
   }
 }
