@@ -1,60 +1,70 @@
-name: Publish NPM package
+name: Node.js Package
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
-    publish:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-          with:
-            fetch-depth: 0
-        
-        - name: Setup Node.js
-          uses: actions/setup-node@v2
-          with:
-            node-version: '20'
-            registry-url: 'https://registry.npmjs.org'
+  bump-version:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Check the version
-          id: check
-          run: |
-            CURRENT_VERSION=$(jq -r .version package.json)
-            echo "Current version: $CURRENT_VERSION"
-            LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-            echo "Latest tag: $LATEST_TAG"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-            LATEST_VERSION=${LATEST_TAG#v}
+      - name: Bump patch version and push tag
+        run: |
+          VERSION=$(npm version patch)
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git commit -am "ci: bump version to $VERSION [skip ci]"
+          git push origin main
+          git push origin "$VERSION"
 
-            if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; 
-            then
-              echo "Version changed"
-              echo "version_changed=true" >> $GITHUB_OUTPUT
-              echo "new_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-            else
-              echo "Version not changed"
-              echo "version_changed=false" >> $GITHUB_OUTPUT
-            fi
-        
-        - name: Publish
-          if: steps.check.outputs.version_changed == 'true'
-          run: npm publish --access public --no-git-checks
-          env:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  create-release:
+    needs: bump-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Tag release
-          if: steps.check.outputs.version_changed == 'true'
-          run: |
-            git config --local user.email "github-actions[bot]@users.noreply.github.com"
-            git config --local user.name "github-actions[bot]"
-            git tag -a "v${{ steps.check.outputs.new_version }}" -m "v${{ steps.check.outputs.new_version }}"
-            git push origin "v${{ steps.check.outputs.new_version }}"
+      - name: Get version from package.json
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: Release ${{ steps.get_version.outputs.version }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  publish-npm:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
 
-
-        
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
