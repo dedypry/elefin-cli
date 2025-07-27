@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
 
 jobs:
   bump-version:
@@ -18,53 +17,31 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Bump patch version and push tag
+      - name: Setup Git Identity
         run: |
-          VERSION=$(npm version patch)
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git commit -am "ci: bump version to $VERSION [skip ci]"
-          git push origin main
-          git push origin "$VERSION"
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
 
-  create-release:
-    needs: bump-version
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Get version from package.json
-        id: get_version
+      - name: Bump patch version
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=v$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          name: Release ${{ steps.get_version.outputs.version }}
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          npm version patch --no-git-tag-version
+          git commit -am "ci: bump version [skip ci]"
+          git push
 
   publish-npm:
-    if: github.event_name == 'release'
+    needs: bump-version 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-
-      - name: Publish to npm
-        run: npm publish
+      - run: npm install
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
