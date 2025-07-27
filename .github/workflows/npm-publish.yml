@@ -8,7 +8,9 @@ on:
     branches: [main]
   release:
     types: [created]
-
+permissions:
+  contents: write
+  
 jobs:
   bump-version:
     if: github.event_name == 'push'
@@ -16,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
