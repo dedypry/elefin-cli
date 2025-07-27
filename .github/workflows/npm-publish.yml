@@ -21,16 +21,18 @@ jobs:
         with:
           node-version: 20
 
-      - name: Setup Git Identity
+      - name: Configure Git Identity
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Bump patch version
         run: |
-          npm version patch --no-git-tag-version
-          git commit -am "ci: bump version [skip ci]"
-          git push
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          npm version patch
+          git push --follow-tags
+
 
   publish-npm:
     needs: bump-version 
