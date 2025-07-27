@@ -1,0 +1,9 @@
+import { Action } from "routing-controllers";
+
+export class <%= name %>Guard {
+  constructor(private readonly opt: string[] = []) {}
+
+  async check(action: Action): Promise<boolean> {
+    return true;
+  }
+}

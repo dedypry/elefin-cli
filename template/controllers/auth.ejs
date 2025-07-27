@@ -1,0 +1,10 @@
+import { Authorized, Controller, Get } from "routing-controllers";
+
+@Controller("/<%= toKebabPath(name) %>")
+@Authorized()
+export class <%= name %>Controller {
+  @Get()
+  async get() {
+    return "Hello Word";
+  }
+}

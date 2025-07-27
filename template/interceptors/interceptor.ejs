@@ -1,0 +1,8 @@
+import { Action, Interceptor, InterceptorInterface } from "routing-controllers";
+
+@Interceptor()
+export class <%= name %>Interceptor implements InterceptorInterface {
+  intercept(action: Action, result: any) {
+    return result
+  }
+}
