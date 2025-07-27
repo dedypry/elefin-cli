@@ -10,7 +10,7 @@ on:
     types: [created]
 permissions:
   contents: write
-  
+
 jobs:
   bump-version:
     if: github.event_name == 'push'
@@ -31,6 +31,7 @@ jobs:
           git commit -am "ci: bump version [skip ci]"
           git push
   publish-npm:
+    needs: bump-version 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
