@@ -1,6 +1,6 @@
 {
   "name": "elefin-cli",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "only elefin backend project",
   "author": "dedypry",
   "main": "bin/cli.js",
