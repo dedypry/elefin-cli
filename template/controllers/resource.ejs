@@ -1,37 +1,37 @@
 import {
   Body,
-  Controller,
+  JsonController,
   Delete,
   Get,
   Param,
   Patch,
   Post,
-} from "routing-controllers";
+} from 'routing-controllers';
 
-@Controller("/<%= toKebabPath(name) %>")
+@JsonController('/<%= toKebabPath(name) %>')
 export class <%= name %>Controller {
   @Get()
   async list() {
-    return "Hello Word";
+    return 'Hello Word';
   }
 
-  @Get(":id")
+  @Get(':id')
   async detail() {
-    return "detail";
+    return 'detail';
   }
 
   @Post()
   async create(@Body() body: any) {
-    return "data success created!";
+    return 'data success created!';
   }
 
-  @Patch(":id")
-  async update(@Param("id") id: string, @Body() body: any) {
-    return "data success updated!";
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() body: any) {
+    return 'data success updated!';
   }
 
-  @Delete(":id")
-  async destroy(@Param("id") id: string) {
-    return "data success deleted!";
+  @Delete(':id')
+  async destroy(@Param('id') id: string) {
+    return 'data success deleted!';
   }
 }

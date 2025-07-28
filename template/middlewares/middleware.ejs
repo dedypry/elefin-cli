@@ -1,6 +1,6 @@
-import { ExpressMiddlewareInterface, Middleware } from "routing-controllers";
+import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 
-@Middleware({ type: "after" })
+@Middleware({ type: 'after' })
 export class <%= name %>Middleware implements ExpressMiddlewareInterface {
   use(request: any, response: any, next: (err?: any) => any) {
     next();

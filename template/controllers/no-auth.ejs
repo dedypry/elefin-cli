@@ -1,9 +1,9 @@
-import { Controller, Get } from "routing-controllers";
+import { JsonController, Get } from 'routing-controllers';
 
-@Controller("/<%= toKebabPath(name) %>")
+@JsonController('/<%= toKebabPath(name) %>')
 export class <%= name %>Controller {
   @Get()
   async get() {
-    return "Hello Word";
+    return 'Hello Word';
   }
 }

@@ -1,6 +1,6 @@
-import type { Knex } from "knex";
+import type { Knex } from 'knex';
 
-const tableName = "<%= name.toLowerCase() %>";
+const tableName = '<%= name.toLowerCase() %>';
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.alterTable(tableName, (table) => {
     
