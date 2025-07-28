@@ -229,8 +229,6 @@ program
       ]);
       name = answers.name;
     }
-
-    const alter = options.alter === true;
     migration(name, {
       isSeeder: true,
     });

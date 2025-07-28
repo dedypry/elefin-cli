@@ -8,7 +8,9 @@ import {
   Patch,
   Post,
 } from 'routing-controllers';
+import { Service } from "typedi";
 
+@Service()
 @JsonController('/<%= toKebabPath(name) %>')
 @Authorized()
 export class <%= name %>Controller {
